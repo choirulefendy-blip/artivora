@@ -1,7 +1,7 @@
 {
   "meta": {
-    "version": 1,
-    "updated_at": "2026-10-28T12:00:00.000Z"
+    "version": 7,
+    "updated_at": "2026-10-28T13:04:06.252Z"
   },
   "settings": {
     "brand_name": "Artivora Creative",
@@ -9,12 +9,12 @@
     "site_url": "https://artivora.my.id",
     "seo_title": "Artivora Creative | Agency Social Media & Desain di Malang",
     "seo_description": "Studio kreatif di Malang untuk social media management, desain, foto & video, dan iklan Meta. Untuk hotel, kafe, restoran, wedding organizer, dan UMKM.",
-    "logo_url": "",
+    "logo_url": "assets/uploads/logo-a-vertikal-mvs40imx.webp",
     "og_image": "assets/img/og.jpg",
-    "whatsapp": "",
+    "whatsapp": "085155499204",
     "whatsapp_greeting": "Halo Artivora, saya mau konsultasi soal media sosial bisnis saya.",
-    "email": "",
-    "instagram": "",
+    "email": "fendysstudio@gmail.com",
+    "instagram": "artivora.creative",
     "tiktok": "",
     "address": "Malang, Jawa Timur",
     "maps_url": ""
@@ -33,9 +33,40 @@
     ]
   },
   "clients": {
-    "visible": false,
+    "visible": true,
     "title": "Bisnis yang sudah bekerja bersama kami",
-    "items": []
+    "items": [
+      {
+        "name": "ABC Hospitality Group",
+        "logo_url": "assets/uploads/abc-icon-blue-mvs41k2h.webp",
+        "url": ""
+      },
+      {
+        "name": "Briggs Inn",
+        "logo_url": "assets/uploads/2021-logo-briggsartboard-1-copy-mvs43mcn.webp",
+        "url": ""
+      },
+      {
+        "name": "Padi Heritage Resort",
+        "logo_url": "assets/uploads/logo-padi-2021-1-mvs43yqz.webp",
+        "url": ""
+      },
+      {
+        "name": "Kaly Eatery",
+        "logo_url": "assets/uploads/logo-logo-text-with-slogan-green-mvs44mlh.webp",
+        "url": ""
+      },
+      {
+        "name": "Rapidz",
+        "logo_url": "assets/uploads/logo-01-mvs466rb.svg",
+        "url": ""
+      },
+      {
+        "name": "Kejunesia",
+        "logo_url": "assets/uploads/logo-kejunesia-mvs46lps.webp",
+        "url": ""
+      }
+    ]
   },
   "services": {
     "visible": true,
@@ -88,7 +119,7 @@
     "empty_text": "Studi kasus sedang kami rapikan. Sementara itu, lihat karya terbaru kami di Instagram.",
     "items": [
       {
-        "visible": false,
+        "visible": true,
         "client": "Suwarga Organizer",
         "industry": "Wedding organizer",
         "service": "Social media management",
@@ -99,7 +130,7 @@
         "metric_value": "6.600",
         "metric_label": "interaksi konten di bulan Juni",
         "image_url": "",
-        "link_url": ""
+        "link_url": "https://www.instagram.com/suwarga.organizer/"
       }
     ]
   },
@@ -190,7 +221,7 @@
     "team": []
   },
   "faq": {
-    "visible": false,
+    "visible": true,
     "title": "Pertanyaan yang sering muncul",
     "items": [
       {
