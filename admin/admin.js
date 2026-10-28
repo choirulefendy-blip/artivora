@@ -277,7 +277,7 @@
     t.classList.toggle('is-error', !!isError);
     t.hidden = false;
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { t.hidden = true; }, isError ? 7000 : 4000);
+    toastTimer = setTimeout(function () { t.hidden = true; }, isError ? 15000 : 4000);
   }
 
   // Resolves to the value of the chosen button.
@@ -349,7 +349,10 @@
     if (s === 401) return onLogin ? 'Token tidak valid atau sudah kedaluwarsa. Periksa lagi token yang ditempel, atau buat token baru.' : 'Token GitHub tidak valid atau sudah kedaluwarsa. Keluar, lalu masuk dengan token baru.';
     if (s === 403) {
       if (/rate limit/i.test(err.message)) return 'Batas permintaan GitHub tercapai. Tunggu beberapa menit lalu coba lagi.';
-      return 'Token belum punya izin menulis. Saat membuat token, atur Contents ke "Read and write".';
+      if (/^ghp_/.test(state.token || '')) {
+        return 'Token klasik ini belum boleh menulis. Buka github.com/settings/tokens, edit token, centang "public_repo", simpan, lalu klik Publikasikan lagi. Tidak perlu login ulang, perubahanmu tetap aman.';
+      }
+      return 'Token ini belum boleh menulis ke repo ' + CFG.repo + '. Buka github.com/settings/personal-access-tokens, klik token-nya, pilih Edit: pastikan repo ' + CFG.repo + ' dipilih dan Contents = "Read and write", lalu simpan dan klik Publikasikan lagi. Tidak perlu login ulang, perubahanmu tetap aman.';
     }
     if (s === 404) return 'Repo ' + CFG.owner + '/' + CFG.repo + ' tidak ditemukan, atau token tidak diberi akses ke repo ini.';
     if (s === 409 || s === 422) return 'Repo berubah saat sedang menyimpan. Muat ulang halaman admin lalu publikasikan lagi.';
@@ -975,6 +978,7 @@
     });
 
     $('#publish-btn').addEventListener('click', publish);
+    $('#toast').addEventListener('click', function () { $('#toast').hidden = true; });
     $('#preview-btn').addEventListener('click', function () { setPreview(!state.previewOpen); });
     $('#preview-close').addEventListener('click', function () { setPreview(false); });
     document.querySelectorAll('[data-device]').forEach(function (b) {
