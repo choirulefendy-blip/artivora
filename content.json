@@ -1,0 +1,216 @@
+{
+  "meta": {
+    "version": 1,
+    "updated_at": "2026-10-28T12:00:00.000Z"
+  },
+  "settings": {
+    "brand_name": "Artivora Creative",
+    "tagline": "Digital art studio",
+    "site_url": "https://artivora.my.id",
+    "seo_title": "Artivora Creative | Agency Social Media & Desain di Malang",
+    "seo_description": "Studio kreatif di Malang untuk social media management, desain, foto & video, dan iklan Meta. Untuk hotel, kafe, restoran, wedding organizer, dan UMKM.",
+    "logo_url": "",
+    "og_image": "assets/img/og.png",
+    "whatsapp": "",
+    "whatsapp_greeting": "Halo Artivora, saya mau konsultasi soal media sosial bisnis saya.",
+    "email": "",
+    "instagram": "",
+    "tiktok": "",
+    "address": "Malang, Jawa Timur",
+    "maps_url": ""
+  },
+  "hero": {
+    "visible": true,
+    "headline": "Konten yang bikin orang berhenti scroll, lalu datang ke tempatmu",
+    "subheadline": "Artivora Creative mengelola media sosial, desain, dan produksi konten untuk hotel, kafe, restoran, dan wedding organizer di Malang dan sekitarnya.",
+    "cta_primary": "Konsultasi via WhatsApp",
+    "cta_secondary": "Lihat layanan",
+    "industries": [
+      "Hotel & resort",
+      "Kafe & restoran",
+      "Wedding organizer",
+      "UMKM"
+    ]
+  },
+  "clients": {
+    "visible": false,
+    "title": "Bisnis yang sudah bekerja bersama kami",
+    "items": []
+  },
+  "services": {
+    "visible": true,
+    "title": "Layanan",
+    "intro": "Pilih satu layanan atau gabungkan semuanya. Setiap pekerjaan dimulai dari tujuan bisnismu, bukan dari jumlah postingan.",
+    "items": [
+      {
+        "title": "Social media management",
+        "description": "Kami pegang akun Instagram dan TikTok bisnismu, dari rencana konten sampai membalas komentar, lalu melaporkan hasilnya setiap bulan.",
+        "deliverables": [
+          "Kalender konten bulanan",
+          "Desain feed, carousel, dan story",
+          "Caption dan riset hashtag",
+          "Laporan performa bulanan"
+        ]
+      },
+      {
+        "title": "Produksi foto & video",
+        "description": "Foto produk, menu, kamar, dan suasana tempat, ditambah Reels pendek yang dibuat supaya ditonton sampai habis.",
+        "deliverables": [
+          "Foto produk dan interior",
+          "Reels dan video pendek",
+          "Konsep dan naskah video"
+        ]
+      },
+      {
+        "title": "Desain & branding",
+        "description": "Logo, identitas visual, dan materi promosi yang konsisten dari feed Instagram sampai meja kasir.",
+        "deliverables": [
+          "Logo dan panduan brand",
+          "Menu, brosur, dan banner",
+          "Template konten siap pakai"
+        ]
+      },
+      {
+        "title": "Iklan Meta & TikTok",
+        "description": "Iklan berbayar yang diarahkan ke orang di sekitar Malang yang paling mungkin datang, memesan, atau menghubungi.",
+        "deliverables": [
+          "Setup dan targeting iklan",
+          "Optimasi mingguan",
+          "Laporan biaya per hasil"
+        ]
+      }
+    ]
+  },
+  "portfolio": {
+    "visible": true,
+    "title": "Hasil kerja",
+    "intro": "Beberapa pekerjaan kami, lengkap dengan masalah awal dan hasilnya.",
+    "empty_text": "Studi kasus sedang kami rapikan. Sementara itu, lihat karya terbaru kami di Instagram.",
+    "items": [
+      {
+        "visible": false,
+        "client": "Suwarga Organizer",
+        "industry": "Wedding organizer",
+        "service": "Social media management",
+        "title": "Dari bergantung iklan ke interaksi organik",
+        "challenge": "Akun lebih banyak mengandalkan iklan berbayar untuk menjangkau calon pengantin.",
+        "approach": "Sejak Mei kami mengelola konten dengan fokus pada interaksi: konten yang mengajak calon pengantin menyimpan, membagikan, dan bertanya.",
+        "result": "Interaksi konten naik setiap bulan dan mencapai 6.600 di bulan Juni.",
+        "metric_value": "6.600",
+        "metric_label": "interaksi konten di bulan Juni",
+        "image_url": "",
+        "link_url": ""
+      }
+    ]
+  },
+  "process": {
+    "visible": true,
+    "title": "Cara kerja",
+    "intro": "Empat langkah dari obrolan pertama sampai laporan bulanan.",
+    "steps": [
+      {
+        "title": "Ngobrol dulu",
+        "description": "Ceritakan bisnismu, target yang ingin dicapai, dan kendala sekarang lewat WhatsApp atau ketemu langsung."
+      },
+      {
+        "title": "Strategi & penawaran",
+        "description": "Kami susun rencana konten dan penawaran harga sesuai kebutuhanmu, bukan paket yang dipaksakan."
+      },
+      {
+        "title": "Produksi & tayang",
+        "description": "Konten dibuat, kamu setujui, lalu dijadwalkan tayang di waktu yang paling ramai."
+      },
+      {
+        "title": "Laporan bulanan",
+        "description": "Setiap bulan kamu menerima laporan angka yang jelas dan rencana untuk bulan berikutnya."
+      }
+    ]
+  },
+  "pricing": {
+    "visible": true,
+    "title": "Harga",
+    "intro": "Kisaran harga untuk pengelolaan media sosial. Penawaran final menyesuaikan kebutuhanmu.",
+    "note": "Harga belum termasuk budget iklan. Pengelolaan iklan dihitung terpisah, 10–20% dari budget atau biaya tetap sesuai skala.",
+    "items": [
+      {
+        "name": "Starter",
+        "audience": "Untuk UMKM dan bisnis yang baru mulai",
+        "price": "Rp1,5 jt",
+        "period": "per bulan",
+        "features": [
+          "1–2 platform",
+          "8–12 konten per bulan",
+          "Caption dan riset hashtag",
+          "Laporan bulanan"
+        ],
+        "highlighted": false,
+        "highlight_label": ""
+      },
+      {
+        "name": "Growth",
+        "audience": "Untuk bisnis yang sedang berkembang",
+        "price": "Rp3,5 jt",
+        "period": "per bulan",
+        "features": [
+          "2–3 platform",
+          "12–20 konten dan 4–8 Reels per bulan",
+          "Kalender konten dan foto produk",
+          "Membalas komentar dan DM setiap hari",
+          "Laporan dengan insight"
+        ],
+        "highlighted": true,
+        "highlight_label": "Rekomendasi kami"
+      },
+      {
+        "name": "Performance",
+        "audience": "Untuk brand besar dan bisnis multi-cabang",
+        "price": "Rp8 jt",
+        "period": "per bulan",
+        "features": [
+          "Strategi konten menyeluruh",
+          "Photoshoot dan video setiap bulan",
+          "Pengelolaan iklan Meta",
+          "Laporan mendalam dan rapat bulanan"
+        ],
+        "highlighted": false,
+        "highlight_label": ""
+      }
+    ]
+  },
+  "testimonials": {
+    "visible": false,
+    "title": "Kata klien",
+    "items": []
+  },
+  "about": {
+    "visible": true,
+    "title": "Studio kreatif dari Malang",
+    "body": "Artivora Creative lahir dari kerja harian mengurus konten untuk hotel, restoran, kedai kopi, dan wedding organizer. Kami tahu bisnis lokal butuh konten yang bukan cuma enak dilihat, tapi juga membuat orang datang, memesan, atau menghubungi.\n\nKami bekerja dari Malang, dekat dengan klien, dan terbiasa turun langsung ke lokasi untuk foto dan video.",
+    "image_url": "",
+    "team": []
+  },
+  "faq": {
+    "visible": false,
+    "title": "Pertanyaan yang sering muncul",
+    "items": [
+      {
+        "question": "Apakah harus kontrak jangka panjang?",
+        "answer": "Tulis kebijakan kontrak Artivora di sini, misalnya minimal 3 bulan atau bisa per bulan."
+      },
+      {
+        "question": "Berapa lama sampai konten pertama tayang?",
+        "answer": "Tulis estimasi waktu dari brief disepakati sampai konten pertama tayang."
+      },
+      {
+        "question": "Apakah bisa melayani bisnis di luar Malang?",
+        "answer": "Tulis area layanan Artivora, termasuk apakah melayani klien jarak jauh."
+      }
+    ]
+  },
+  "contact": {
+    "visible": true,
+    "title": "Ceritakan bisnismu",
+    "body": "Isi form singkat ini, pesannya langsung terbuka di WhatsApp kami. Atau hubungi lewat kontak di bawah.",
+    "button_label": "Kirim lewat WhatsApp"
+  }
+}
