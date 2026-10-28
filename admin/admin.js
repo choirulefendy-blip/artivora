@@ -16,6 +16,7 @@
     remoteSha: null,
     pending: new Map(), // path -> { base64, url, size }
     published: new Map(), // path -> blob url, until GitHub Pages has the file
+    repoFiles: null, // Set of file paths in the repo, for spotting missing images
     section: 'settings',
     previewOpen: false,
     device: 'desktop',
@@ -369,8 +370,64 @@
       state.original = JSON.stringify(content);
       state.remoteSha = file.sha;
       state.pending.clear();
+      return Promise.all([loadRepoFiles(), loadPendingFromDisk()]);
+    }).then(function () {
       checkDraft();
     });
+  }
+
+  function loadRepoFiles() {
+    return gh(REPO_PATH + '/git/trees/' + encodeURIComponent(CFG.branch) + '?recursive=1').then(function (t) {
+      state.repoFiles = new Set((t.tree || []).filter(function (e) { return e.type === 'blob'; }).map(function (e) { return e.path; }));
+    }).catch(function () { state.repoFiles = null; });
+  }
+
+  // ---------- uploads waiting to be published survive reloads (IndexedDB) ----------
+  var IDB_NAME = 'artivora_admin', IDB_STORE = 'pending';
+  function idbOpen() {
+    return new Promise(function (resolve, reject) {
+      if (!window.indexedDB) { reject(new Error('IndexedDB tidak tersedia')); return; }
+      var req = indexedDB.open(IDB_NAME, 1);
+      req.onupgradeneeded = function () { req.result.createObjectStore(IDB_STORE); };
+      req.onsuccess = function () { resolve(req.result); };
+      req.onerror = function () { reject(req.error); };
+    });
+  }
+  function idbWrite(fn) {
+    return idbOpen().then(function (db) {
+      return new Promise(function (resolve) {
+        var tx = db.transaction(IDB_STORE, 'readwrite');
+        fn(tx.objectStore(IDB_STORE));
+        tx.oncomplete = function () { resolve(true); };
+        tx.onerror = tx.onabort = function () { resolve(false); };
+      });
+    }).catch(function () { return false; });
+  }
+  function savePendingToDisk(path, rec) { return idbWrite(function (store) { store.put(rec, path); }); }
+  function deletePendingFromDisk(paths) { return idbWrite(function (store) { paths.forEach(function (p) { store.delete(p); }); }); }
+  function clearPendingOnDisk() { return idbWrite(function (store) { store.clear(); }); }
+  function b64ToBlob(b64, type) {
+    var bin = atob(b64), bytes = new Uint8Array(bin.length);
+    for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    return new Blob([bytes], { type: type || 'application/octet-stream' });
+  }
+  function loadPendingFromDisk() {
+    return idbOpen().then(function (db) {
+      return new Promise(function (resolve) {
+        var tx = db.transaction(IDB_STORE, 'readonly');
+        var store = tx.objectStore(IDB_STORE);
+        var keys = store.getAllKeys(), vals = store.getAll();
+        tx.oncomplete = function () {
+          keys.result.forEach(function (path, i) {
+            var rec = vals.result[i];
+            if (!rec || !rec.base64 || state.pending.has(path)) return;
+            state.pending.set(path, { base64: rec.base64, url: URL.createObjectURL(b64ToBlob(rec.base64, rec.type)), size: rec.size });
+          });
+          resolve();
+        };
+        tx.onerror = function () { resolve(); };
+      });
+    }).catch(function () {});
   }
 
   // ---------- assets ----------
@@ -427,6 +484,7 @@
       var path = 'assets/uploads/' + slugify(file.name) + '-' + Date.now().toString(36) + '.' + res.ext;
       return blobToBase64(res.blob).then(function (b64) {
         state.pending.set(path, { base64: b64, url: URL.createObjectURL(res.blob), size: res.blob.size });
+        savePendingToDisk(path, { base64: b64, type: res.blob.type, size: res.blob.size });
         return { path: path, size: res.blob.size };
       });
     });
@@ -441,6 +499,34 @@
       else if (v && typeof v === 'object') Object.keys(v).forEach(function (k) { walk(v[k]); });
     })(state.content);
     return used;
+  }
+
+  function localPath(v) {
+    v = String(v || '').trim();
+    if (!v || /^(https?:|blob:|data:)/i.test(v) || /^\/\//.test(v)) return '';
+    return v.replace(/^\.?\/+/, '');
+  }
+  function isMissing(v) {
+    var p = localPath(v);
+    return !!p && !state.pending.has(p) && !state.published.has(p) && !!state.repoFiles && !state.repoFiles.has(p);
+  }
+  // Images the content points to that exist neither in the repo nor as an upload waiting to be published.
+  function missingImages() {
+    var out = [];
+    function walk(fields, obj, prefix, sectionKey) {
+      fields.forEach(function (f) {
+        if (!obj || f.group) return;
+        if (f.type === 'image' && isMissing(obj[f.key])) out.push({ label: prefix + ': ' + f.label, section: sectionKey, obj: obj, key: f.key });
+        if (f.type === 'list' && Array.isArray(obj[f.key])) {
+          obj[f.key].forEach(function (item) {
+            var name = String(item[f.titleKey] || '').trim() || f.emptyTitle || 'item';
+            walk(f.fields, item, prefix + ' (' + name + ')', sectionKey);
+          });
+        }
+      });
+    }
+    SECTIONS.forEach(function (sec) { walk(sec.fields, state.content[sec.key], sec.label, sec.key); });
+    return out;
   }
 
   function formatKB(bytes) { return bytes > 1024 * 1024 ? (bytes / 1048576).toFixed(1) + ' MB' : Math.round(bytes / 1024) + ' KB'; }
@@ -520,6 +606,8 @@
     var parts = [];
 
     if (state.draft) parts.push(draftBanner());
+    var missing = missingImages();
+    if (missing.length) parts.push(missingBanner(missing));
 
     var toggle = null;
     if (sec.toggle !== false) {
@@ -546,13 +634,20 @@
     refreshStatus();
   }
 
+  function missingBanner(missing) {
+    return el('div', { class: 'banner banner-error', role: 'alert' },
+      el('p', { html: '<strong>' + missing.length + ' gambar belum ada di repo</strong>, jadi tampil rusak di website. Buka bagiannya, lalu pilih ulang gambarnya dan publikasikan.' }),
+      el('ul', { class: 'missing-list' }, missing.map(function (m) {
+        return el('li', null, el('button', { type: 'button', class: 'link-btn', text: m.label, onclick: function () { openSection(m.section); } }));
+      })));
+  }
+
   function draftBanner() {
     var changed = state.draft.baseSha !== state.remoteSha;
     var when = new Date(state.draft.savedAt).toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' });
     return el('div', { class: 'banner', role: 'status' },
       el('p', { text: 'Ada draf yang belum dipublikasikan dari ' + when + '.' +
-        (changed ? ' Isi website sudah berubah sejak draf itu dibuat, jadi memakai draf akan menimpa perubahan tersebut.' : '') +
-        ' Gambar yang belum sempat dipublikasikan perlu dipilih ulang.' }),
+        (changed ? ' Isi website sudah berubah sejak draf itu dibuat, jadi memakai draf akan menimpa perubahan tersebut.' : '') }),
       el('div', { class: 'banner-actions' },
         el('button', { type: 'button', class: 'btn btn-coral', text: 'Pakai draf', onclick: function () {
           state.content = state.draft.content;
@@ -561,7 +656,7 @@
           toast('Draf dipakai. Periksa lalu publikasikan.');
         } }),
         el('button', { type: 'button', class: 'btn btn-line', text: 'Buang draf', onclick: function () {
-          state.draft = null; clearDraft(); renderEditor();
+          state.draft = null; clearDraft(); state.pending.clear(); clearPendingOnDisk(); renderEditor();
         } })));
   }
 
@@ -634,7 +729,13 @@
     function refresh() {
       var v = obj[f.key] || '';
       urlInput.value = v;
-      if (v) {
+      if (v && isMissing(v)) {
+        thumb.style.backgroundImage = '';
+        thumb.textContent = 'File hilang';
+        thumb.classList.remove('has-image');
+        note.textContent = 'File gambar ini tidak ada di repo. Pilih ulang gambarnya.';
+        note.className = 'field-help is-err';
+      } else if (v) {
         thumb.style.backgroundImage = 'url("' + resolveAsset(v).replace(/"/g, '%22') + '")';
         thumb.textContent = '';
         thumb.classList.add('has-image');
@@ -806,6 +907,10 @@
         [{ label: 'Batal', value: false }, { label: 'Timpa dan publikasikan', value: true, cls: 'btn-coral' }]);
     }).then(function (go) {
       if (!go) throw { cancelled: true };
+      return loadRepoFiles();
+    }).then(function () {
+      var missing = missingImages();
+      if (missing.length) throw { missing: missing };
       setStatus('Menyimpan ke GitHub…', 'busy');
 
       var content = state.content;
@@ -848,7 +953,12 @@
       }).then(function () {
         state.remoteSha = contentBlobSha;
         state.original = JSON.stringify(content);
-        images.forEach(function (p) { state.published.set(p, state.pending.get(p).url); state.pending.delete(p); });
+        images.forEach(function (p) {
+          state.published.set(p, state.pending.get(p).url);
+          state.pending.delete(p);
+          if (state.repoFiles) state.repoFiles.add(p);
+        });
+        deletePendingFromDisk(images);
         clearDraft();
         state.busy = false;
         toast('Dipublikasikan. Website ter-update dalam sekitar 1 menit.');
@@ -857,6 +967,21 @@
     }).catch(function (err) {
       state.busy = false;
       if (err && err.cancelled) { refreshStatus(); return; }
+      if (err && err.missing) {
+        refreshStatus();
+        renderEditor();
+        ask(err.missing.length + ' gambar belum ter-upload',
+          'Gambar ini dirujuk di website tapi file-nya tidak ada: ' + err.missing.map(function (m) { return m.label; }).join('; ') +
+          '. Pilih ulang gambarnya dulu, atau kosongkan gambar-gambar itu lalu publikasikan.',
+          [{ label: 'Pilih ulang dulu', value: false }, { label: 'Kosongkan lalu publikasikan', value: true, cls: 'btn-coral' }]
+        ).then(function (clear) {
+          if (!clear) return;
+          err.missing.forEach(function (m) { m.obj[m.key] = ''; });
+          renderEditor(); onChange();
+          publish();
+        });
+        return;
+      }
       refreshStatus();
       toast(explain(err), true);
     });
@@ -896,6 +1021,7 @@
       if (!ok) return;
       state.content = JSON.parse(state.original);
       state.pending.clear();
+      clearPendingOnDisk();
       clearDraft();
       renderNav(); renderEditor(); onChange();
       toast('Perubahan dibatalkan.');
