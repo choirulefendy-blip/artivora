@@ -7,7 +7,7 @@
   'use strict';
 
   // Bump this when site.css / site.js change, so browsers fetch the new files.
-  var ASSET_VERSION = '1.1.0';
+  var ASSET_VERSION = '1.2.0';
 
   // ---------- helpers ----------
   function esc(value) {
@@ -462,7 +462,7 @@
       '<link rel="stylesheet" href="assets/css/site.css' + v + '">\n' +
       '<script type="application/ld+json">' + jsonLd(c) + '</script>\n' +
       '<!-- Halaman ini dibuat otomatis dari content.json. Ubah isinya lewat /admin, bukan di file ini. -->\n' +
-      '</head>\n<body' + (opts.preview ? ' class="is-preview"' : '') + '>\n' +
+      '</head>\n<body' + (opts.preview ? ' class="is-preview"' : '') + ' data-motion="' + (s.animate === false ? 'off' : 'on') + '">\n' +
       '<a class="skip-link" href="#main">Langsung ke isi</a>\n' +
       brandDefs() + '\n' +
       renderBody(c, opts) + '\n' +

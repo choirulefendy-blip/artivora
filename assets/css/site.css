@@ -240,13 +240,68 @@ button, input, select, textarea { font: inherit; color: inherit; }
   .hero-sub { max-width: min(44ch, calc(100% - min(30vw, 460px) - 48px)); }
 }
 
-/* the one orchestrated moment: the A rises into place */
-.hero-mark { clip-path: inset(100% 0 0 0); animation: mark-rise 1.1s cubic-bezier(.2, .75, .2, 1) .15s forwards; }
+/* ---------- motion ----------
+   One language throughout: things rise, the way the A rises in the hero. */
+:root { --ease-rise: cubic-bezier(.2, .75, .2, 1); }
+
+/* hero on load: the A rises, the headline lifts out from a baseline, the rest follows */
+.hero-art { translate: 0 var(--parallax, 0px); will-change: translate; }
+.hero-mark { clip-path: inset(100% 0 0 0); animation: mark-rise 1.1s var(--ease-rise) .15s forwards; }
 @keyframes mark-rise { to { clip-path: inset(0 0 0 0); } }
+
+.hero-title { animation: title-rise 1s var(--ease-rise) .05s both; }
+.hero-sub { animation: soft-rise .9s var(--ease-rise) .35s both; }
+.hero-actions { animation: soft-rise .9s var(--ease-rise) .5s both; }
+.hero-industries { animation: soft-rise .9s var(--ease-rise) .65s both; }
+@keyframes title-rise {
+  from { clip-path: inset(-20% -10% 100% -10%); transform: translateY(.3em); }
+  to   { clip-path: inset(-20% -10% -30% -10%); transform: none; }
+}
+@keyframes soft-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* scroll reveals: site.js marks elements below the fold with data-reveal */
+[data-reveal] {
+  transition-duration: .9s;
+  transition-timing-function: var(--ease-rise);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+[data-reveal="up"] { transition-property: opacity, transform; }
+[data-reveal="up"]:not(.is-in) { opacity: 0; transform: translateY(32px); }
+
+[data-reveal="title"] { transition-property: clip-path, transform; transition-duration: 1s; clip-path: inset(-20% -10% -30% -10%); }
+[data-reveal="title"]:not(.is-in) { clip-path: inset(-20% -10% 100% -10%); transform: translateY(.35em); }
+
+[data-reveal="media"] { transition-property: clip-path; transition-duration: 1.2s; clip-path: inset(0 0 0 0 round var(--radius-lg)); }
+[data-reveal="media"]:not(.is-in) { clip-path: inset(100% 0 0 0 round var(--radius-lg)); }
+[data-reveal="media"] > img,
+[data-reveal="media"] > svg { transition: transform 1.6s var(--ease-rise) var(--reveal-delay, 0ms); }
+[data-reveal="media"]:not(.is-in) > img,
+[data-reveal="media"]:not(.is-in) > svg { transform: scale(1.12) translateY(4%); }
+
+/* process: numbers pop in, then the connecting line draws to the next step */
+.step[data-reveal] .step-num { transition: transform .6s cubic-bezier(.3, 1.5, .5, 1) calc(var(--reveal-delay, 0ms) + 150ms); }
+.step[data-reveal]:not(.is-in) .step-num { transform: scale(.3); }
+.step[data-reveal]::after { transform-origin: top center; transition: transform .9s var(--ease-rise) calc(var(--reveal-delay, 0ms) + 350ms); }
+.step[data-reveal]:not(.is-in)::after { transform: scaleY(0); }
+@media (min-width: 900px) {
+  .step[data-reveal]::after { transform-origin: left center; }
+  .step[data-reveal]:not(.is-in)::after { transform: scaleX(0); }
+}
+
+.work-metric [data-count] { font-variant-numeric: tabular-nums; }
+
+/* no motion in the admin preview, when switched off in the admin, or when the visitor asks for less */
+.is-preview .hero-mark, .is-preview .hero-title, .is-preview .hero-sub, .is-preview .hero-actions, .is-preview .hero-industries,
+[data-motion="off"] .hero-mark, [data-motion="off"] .hero-title, [data-motion="off"] .hero-sub,
+[data-motion="off"] .hero-actions, [data-motion="off"] .hero-industries { animation: none; clip-path: none; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .hero-mark { animation: none; clip-path: none; }
+  .hero-mark, .hero-title, .hero-sub, .hero-actions, .hero-industries { animation: none; clip-path: none; }
+  .hero-art { translate: none; }
 }
 
 /* ---------- shared section ---------- */

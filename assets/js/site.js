@@ -77,4 +77,145 @@
       }
     });
   }
+
+  // ---------- Scroll motion ----------
+  // Everything "rises" like the A in the hero. Only elements that start below the
+  // fold are hidden, so nothing visible ever flickers and the page still works
+  // without JavaScript. Off in the admin preview, when the admin switch is off,
+  // and for visitors who ask their device for reduced motion.
+  var body = document.body;
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var motionOn = !reduceMotion &&
+    body.getAttribute('data-motion') !== 'off' &&
+    !body.classList.contains('is-preview') &&
+    'IntersectionObserver' in window;
+  if (!motionOn) return;
+
+  var REVEAL = [
+    ['title', '.section-head h2, .about-text h2, .faq-grid h2, .contact-info h2, .clients-title'],
+    ['media', '.work-media, .about-media'],
+    ['up', [
+      '.section-intro', '.service', '.work-meta', '.work-title', '.work-metric', '.work-story', '.work .text-link',
+      '.work-empty', '.step', '.tier', '.pricing-note', '.quote', '.about-text p', '.member',
+      '.faq-item', '.clients-list li', '.contact-direct li', '.contact-form'
+    ].join(', ')]
+  ];
+  var STAGGER = 90;     // ms between items that enter together
+  var MAX_STAGGER = 6;
+
+  var fold = window.innerHeight;
+  var observer = new IntersectionObserver(onEnter, { rootMargin: '0px 0px -8% 0px', threshold: 0.12 });
+  // Titles and images start fully clipped, and a fully clipped element never
+  // reports as visible, so for those we watch their parent instead.
+  var watched = new Map(); // observed element -> elements it reveals
+
+  REVEAL.forEach(function (group) {
+    var type = group[0];
+    document.querySelectorAll(group[1]).forEach(function (node) {
+      if (node.hasAttribute('data-reveal') || node.closest('.hero')) return;
+      if (node.getBoundingClientRect().top < fold) return; // already on screen: leave it be
+      node.setAttribute('data-reveal', type);
+      prepareCounter(node);
+      var target = (type === 'title' || type === 'media') ? node.parentElement : node;
+      if (!watched.has(target)) { watched.set(target, []); observer.observe(target); }
+      watched.get(target).push(node);
+    });
+  });
+
+  function onEnter(entries) {
+    var entering = [];
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      observer.unobserve(entry.target);
+      (watched.get(entry.target) || []).forEach(function (node) { entering.push(node); });
+      watched.delete(entry.target);
+    });
+    entering.sort(function (a, b) {
+      var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+      return (ra.top - rb.top) || (ra.left - rb.left);
+    });
+    entering.forEach(function (node, i) {
+      var delay = Math.min(i, MAX_STAGGER) * STAGGER;
+      node.style.setProperty('--reveal-delay', delay + 'ms');
+      node.classList.add('is-in');
+      var counter = node.querySelector('[data-count]');
+      if (counter) setTimeout(function () { runCounter(counter); }, delay + 250);
+    });
+  }
+
+  // Numbers like "6.600", "3x" or "+45%" count up when they appear.
+  function prepareCounter(node) {
+    var strong = node.matches('.work-metric') ? node.querySelector('strong') : null;
+    if (!strong) return;
+    var text = strong.textContent.trim();
+    var m = text.match(/^([^0-9]*)([0-9][0-9.,]*)(.*)$/);
+    if (!m) return;
+    var parsed = parseNumber(m[2]);
+    if (!parsed || parsed.value === 0) return;
+    strong.textContent = '';
+    var shown = document.createElement('span');
+    shown.setAttribute('aria-hidden', 'true');
+    shown.setAttribute('data-count', '');
+    shown.textContent = m[1] + formatNumber(0, parsed) + m[3];
+    var real = document.createElement('span');
+    real.className = 'sr-only';
+    real.textContent = text;
+    strong.appendChild(shown);
+    strong.appendChild(real);
+    shown._count = { prefix: m[1], suffix: m[3], parsed: parsed };
+  }
+
+  function parseNumber(raw) {
+    var thousands = '', decimal = '';
+    if (/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(raw)) { thousands = '.'; decimal = ','; }
+    else if (/^\d{1,3}(,\d{3})+(\.\d+)?$/.test(raw)) { thousands = ','; decimal = '.'; }
+    else if (/^\d+,\d+$/.test(raw)) { decimal = ','; }
+    else if (/^\d+\.\d+$/.test(raw)) { decimal = '.'; }
+    else if (!/^\d+$/.test(raw)) return null;
+    var normalized = raw;
+    if (thousands) normalized = normalized.split(thousands).join('');
+    if (decimal) normalized = normalized.replace(decimal, '.');
+    var value = parseFloat(normalized);
+    if (isNaN(value)) return null;
+    var decimals = decimal && raw.indexOf(decimal) > -1 ? raw.length - raw.indexOf(decimal) - 1 : 0;
+    return { value: value, thousands: thousands, decimal: decimal, decimals: decimals };
+  }
+
+  function formatNumber(n, p) {
+    var parts = n.toFixed(p.decimals).split('.');
+    var int = parts[0];
+    if (p.thousands) int = int.replace(/\B(?=(\d{3})+(?!\d))/g, p.thousands);
+    return parts[1] ? int + (p.decimal || '.') + parts[1] : int;
+  }
+
+  function runCounter(el) {
+    var c = el._count;
+    if (!c) return;
+    var start = null, duration = 1400;
+    function frame(t) {
+      if (start === null) start = t;
+      var k = Math.min(1, (t - start) / duration);
+      var eased = 1 - Math.pow(1 - k, 3);
+      el.textContent = c.prefix + formatNumber(c.parsed.value * eased, c.parsed) + c.suffix;
+      if (k < 1) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // The hero A drifts slower than the page while scrolling past it.
+  var heroArt = document.querySelector('.hero-art');
+  var hero = document.querySelector('.hero');
+  if (heroArt && hero) {
+    var ticking = false;
+    var update = function () {
+      ticking = false;
+      var y = window.scrollY;
+      if (y > hero.offsetHeight) return;
+      heroArt.style.setProperty('--parallax', (y * 0.22).toFixed(1) + 'px');
+    };
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  }
 })();

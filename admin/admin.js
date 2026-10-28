@@ -43,6 +43,7 @@
         { group: 'Brand' },
         { key: 'brand_name', label: 'Nama brand', type: 'text' },
         { key: 'tagline', label: 'Tagline', type: 'text', help: 'Tampil di footer.' },
+        { key: 'animate', label: 'Animasi saat scroll', type: 'toggle', default: true, help: 'Judul, konten, dan gambar muncul dengan gerakan naik saat halaman di-scroll. Pratinjau di admin selalu tanpa animasi; lihat hasilnya di website setelah dipublikasikan.' },
         { key: 'logo_url', label: 'Logo', type: 'image', maxSize: 600, help: 'Opsional. Kosongkan untuk memakai logo Artivora bawaan. Pakai file berlatar transparan (PNG atau SVG).' },
         { group: 'Google & saat link dibagikan' },
         { key: 'seo_title', label: 'Judul halaman', type: 'text', max: 60, help: 'Tampil di tab browser dan hasil pencarian Google.' },
@@ -671,9 +672,10 @@
     if (f.type === 'list') return buildList(f, obj);
     if (f.type === 'image') return buildImage(f, obj, after);
     if (f.type === 'toggle') {
-      return el('div', { class: 'field' }, switchControl(f.label, obj[f.key], function (on) {
+      var current = typeof obj[f.key] === 'boolean' ? obj[f.key] : !!f.default;
+      return el('div', { class: 'field' }, switchControl(f.label, current, function (on) {
         obj[f.key] = on; if (after) after(); onChange();
-      }));
+      }), f.help ? el('p', { class: 'field-help', text: f.help }) : null);
     }
 
     var id = 'f' + (++uid);
