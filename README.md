@@ -43,7 +43,7 @@ Perubahan DNS bisa butuh beberapa menit sampai 24 jam. Setelah domain terhubung,
 
 1. Buka https://github.com/settings/personal-access-tokens/new
 2. **Token name**: `Artivora admin`. **Expiration**: sesuai kebutuhan (misalnya 1 tahun).
-3. **Repository access**: *Only select repositories* → pilih `artivora-web`.
+3. **Repository access**: *Only select repositories* → pilih `artivora`.
 4. **Permissions → Repository permissions → Contents**: **Read and write**.
 5. **Generate token**, salin, lalu tempel di halaman login **https://artivora.my.id/admin**.
 
