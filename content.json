@@ -1,7 +1,7 @@
 {
   "meta": {
-    "version": 7,
-    "updated_at": "2026-10-28T13:04:06.252Z"
+    "version": 8,
+    "updated_at": "2026-10-28T13:16:58.271Z"
   },
   "settings": {
     "brand_name": "Artivora Creative",
@@ -38,32 +38,32 @@
     "items": [
       {
         "name": "ABC Hospitality Group",
-        "logo_url": "assets/uploads/abc-icon-blue-mvs41k2h.webp",
+        "logo_url": "assets/uploads/abc-icon-blue-mvs5259b.webp",
         "url": ""
       },
       {
         "name": "Briggs Inn",
-        "logo_url": "assets/uploads/2021-logo-briggsartboard-1-copy-mvs43mcn.webp",
+        "logo_url": "assets/uploads/2021-logo-briggsartboard-1-copy-mvs51q9r.webp",
         "url": ""
       },
       {
         "name": "Padi Heritage Resort",
-        "logo_url": "assets/uploads/logo-padi-2021-1-mvs43yqz.webp",
+        "logo_url": "assets/uploads/logo-padi-2021-1-mvs510jg.webp",
         "url": ""
       },
       {
         "name": "Kaly Eatery",
-        "logo_url": "assets/uploads/logo-logo-text-with-slogan-green-mvs44mlh.webp",
+        "logo_url": "assets/uploads/logo-logo-text-with-slogan-green-mvs50j3r.webp",
         "url": ""
       },
       {
         "name": "Rapidz",
-        "logo_url": "assets/uploads/logo-01-mvs466rb.svg",
+        "logo_url": "assets/uploads/logo-01-mvs504wo.svg",
         "url": ""
       },
       {
         "name": "Kejunesia",
-        "logo_url": "assets/uploads/logo-kejunesia-mvs46lps.webp",
+        "logo_url": "assets/uploads/logo-kejunesia-mvs4zdcg.webp",
         "url": ""
       }
     ]
