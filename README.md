@@ -1,5 +1,7 @@
 # Artivora Creative — website
 
+<img src="assets/img/logo.webp" alt="Artivora" width="140">
+
 Website company profile Artivora Creative di **https://artivora.my.id**, di-hosting gratis di GitHub Pages, lengkap dengan halaman admin di **/admin** untuk mengubah isinya tanpa coding.
 
 ## Cara kerjanya
@@ -67,7 +69,8 @@ assets/js/render.js mesin yang mengubah content.json menjadi index.html
 assets/css/site.css tampilan website
 assets/js/site.js   menu HP dan form WhatsApp
 assets/uploads/     gambar yang diunggah dari admin
-assets/fonts/       Plus Jakarta Sans & Poppins (lisensi SIL OFL)
+assets/fonts/       Plus Jakarta Sans (lisensi SIL OFL)
+assets/img/         logo, favicon, dan gambar saat link dibagikan
 scripts/build.js    membuat ulang index.html dari terminal
 ```
 

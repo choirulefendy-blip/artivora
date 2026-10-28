@@ -7,7 +7,7 @@
   'use strict';
 
   // Bump this when site.css / site.js change, so browsers fetch the new files.
-  var ASSET_VERSION = '1.0.0';
+  var ASSET_VERSION = '1.1.0';
 
   // ---------- helpers ----------
   function esc(value) {
@@ -91,34 +91,45 @@
   }
 
   // ---------- brand mark ----------
-  var markId = 0;
-  function brandMark(opts) {
-    opts = opts || {};
-    var id = 'am' + (++markId);
-    var from = opts.dark ? '#B9A5F0' : '#4C1D95';
-    var cls = opts.className ? ' class="' + opts.className + '"' : '';
-    return '<svg' + cls + ' viewBox="0 0 100 100" aria-hidden="true" focusable="false">' +
-      '<defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1">' +
-      '<stop offset="0" stop-color="' + from + '"/><stop offset="1" stop-color="#FF6B4A"/>' +
-      '</linearGradient></defs>' +
-      '<path class="mark-stroke mark-stroke-a" pathLength="1" d="M20 88 C 29 62, 39 36, 52 11" fill="none" stroke="url(#' + id + ')" stroke-width="12" stroke-linecap="round"/>' +
-      '<path class="mark-stroke mark-stroke-b" pathLength="1" d="M47 13 C 59 37, 69 62, 81 88" fill="none" stroke="url(#' + id + ')" stroke-width="12" stroke-linecap="round"/>' +
-      '<circle class="mark-dot" cx="50" cy="63" r="7.5" fill="#FF6B4A"/>' +
-      '</svg>';
+  // The Artivora "A", traced from the official logo. Defined once per page as a
+  // <symbol> (with its copper-to-espresso gradient and film grain) and reused.
+  var A_PATH = 'M89.1 521.6 C88.7 521.4 87.3 521.1 86.1 521 C37.7 515 4.7 475.7 1 419.6 C0.9 417.6 0.6 414.9 0.4 413.7 C-0.1 410.8 -0.1 399.5 0.4 396.6 C0.6 395.4 0.9 392.6 1 390.2 C3 356.4 14.9 313.2 34.2 269.7 C38.6 259.8 40.2 256.6 56.4 223.2 C58 220 60.2 215.6 61.3 213.4 C62.3 211.2 64.6 206.5 66.3 203 C68 199.5 72.8 189.7 77 181.1 C81.2 172.6 85.9 162.9 87.5 159.6 C89.1 156.3 93.8 146.7 98 138.1 C102.2 129.6 106.9 119.9 108.5 116.6 C110.1 113.3 114.8 103.7 119 95.1 C129.5 73.5 131.4 69.7 140.1 51.9 C144.4 43.2 148.9 33.9 150.3 31.1 C151.6 28.4 155.5 20.3 159 13.3 C162.4 6.2 165.2 0.3 165.2 0.2 C165.2 0.1 185.9 -0 211.1 -0 L256.9 -0 L257.5 1.2 C258.1 2.4 264.3 16.1 273 35.1 C275.5 40.6 278.4 47 279.5 49.4 C283 57.1 294.4 81.9 301 96.5 C307.4 110.5 318.6 135.1 322.5 143.6 C323.6 146 326.8 153 329.6 159.2 C332.5 165.5 335.4 171.9 336.1 173.5 C336.9 175.1 339.5 180.9 342 186.4 C344.5 191.9 347.4 198.3 348.5 200.6 C349.6 203 353.4 211.3 356.9 219.1 C360.5 227 366.4 239.8 370 247.7 C373.6 255.6 379.4 268.4 383 276.2 C386.6 284.1 392.4 296.9 396 304.8 C399.6 312.7 403.4 321 404.5 323.4 C406.6 328.1 419.6 356.4 426.5 371.6 C429 377 432.7 385.3 434.9 390.1 C445 412.1 452.3 428.1 454.5 433 C455.8 436 458.7 442.3 460.9 447.1 C465 456.1 476 480.2 480.6 490.2 C490 510.8 489.4 509.3 488.5 509.7 C487.5 510.3 370.4 510.1 369.8 509.6 C369.5 509.3 368.5 507.7 367.6 506 C352.2 477.3 326.2 460.1 300.1 461.4 C280.4 462.3 266.1 467 225.9 486 C200 498.2 191.9 501.8 178.4 506.9 C158.4 514.4 137.5 519.5 120.6 521 C119.1 521.1 117.3 521.4 116.6 521.6 C114.9 522.2 90.3 522.1 89.1 521.6 Z M149.9 419.3 C162.9 417.2 175 412.5 199.6 400.1 C245.8 376.9 247.4 376.1 258.4 371.6 C272.6 365.7 288.2 361.1 297.6 359.9 C299.6 359.6 300.5 359.3 300.6 358.6 C300.8 358 301.5 359.4 286.9 327.9 C283.3 320 279.2 311 275.7 303.3 C273.2 298 266.5 283.4 257.9 264.8 C256.7 262.1 255.2 258.7 254.5 257.2 C253.9 255.8 252 251.8 250.4 248.4 C248.9 244.9 245 236.6 241.9 229.8 C238.8 222.9 235 214.7 233.5 211.5 C232 208.3 229.5 202.8 227.9 199.4 C226.3 195.9 224.1 191 222.9 188.5 C221.8 186 218.9 179.7 216.5 174.5 C214.1 169.3 212 164.9 211.8 164.7 C211 163.9 210.5 164.4 209.2 167.2 C207.3 171.3 188.1 211.6 184 220.1 C179.3 230 173.7 241.8 169 251.6 C149.8 291.8 145.4 301.4 138.8 316.8 C118.5 364.4 112.5 394.2 120.4 409.2 C125 418 135.6 421.6 149.9 419.3 Z';
+
+  function brandDefs() {
+    return '<svg class="brand-defs" width="0" height="0" aria-hidden="true" focusable="false"><defs>' +
+      '<linearGradient id="aa-g" gradientUnits="userSpaceOnUse" x1="140" y1="0" x2="440" y2="440">' +
+      '<stop offset="0" stop-color="#D07447"/><stop offset=".3" stop-color="#9C5236"/><stop offset=".56" stop-color="#45241A"/>' +
+      '<stop offset=".8" stop-color="#1E100A"/><stop offset="1" stop-color="#120804"/></linearGradient>' +
+      '<radialGradient id="aa-r" gradientUnits="userSpaceOnUse" cx="0" cy="480" r="240">' +
+      '<stop offset="0" stop-color="#B0706A" stop-opacity=".75"/><stop offset=".6" stop-color="#8A4E46" stop-opacity=".3"/>' +
+      '<stop offset="1" stop-color="#8A4E46" stop-opacity="0"/></radialGradient>' +
+      '<filter id="aa-grain" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">' +
+      '<feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" seed="7" stitchTiles="stitch" result="n"/>' +
+      '<feColorMatrix in="n" type="matrix" values="0 0 0 0 1 0 0 0 0 .8 0 0 0 0 .64 0 0 0 2.2 -1.22" result="l"/>' +
+      '<feColorMatrix in="n" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.2 .98" result="k"/>' +
+      '<feComposite in="l" in2="SourceAlpha" operator="in" result="l2"/><feComposite in="k" in2="SourceAlpha" operator="in" result="k2"/>' +
+      '<feMerge><feMergeNode in="SourceGraphic"/><feMergeNode in="l2"/><feMergeNode in="k2"/></feMerge></filter>' +
+      '<symbol id="artivora-a" viewBox="0 0 490 522"><g filter="url(#aa-grain)">' +
+      '<path d="' + A_PATH + '" fill="url(#aa-g)"/><path d="' + A_PATH + '" fill="url(#aa-r)"/></g></symbol>' +
+      '</defs></svg>';
+  }
+
+  function brandMark(className) {
+    return '<svg class="' + (className || '') + '" viewBox="0 0 490 522" aria-hidden="true" focusable="false"><use href="#artivora-a"/></svg>';
   }
 
   function logo(settings, opts) {
     var name = str(settings.brand_name) || 'Artivora Creative';
     var logoUrl = safeUrl(opts.resolve(settings.logo_url));
-    if (logoUrl) {
-      return '<img class="logo-img" src="' + esc(logoUrl) + '" alt="' + esc(name) + '">';
-    }
-    var parts = name.split(/\s+/);
-    var first = parts.shift();
-    return brandMark({ dark: true, className: 'logo-mark' }) +
-      '<span class="logo-word">' + esc(first) +
-      (parts.length ? '<span class="logo-rest"> ' + esc(parts.join(' ')) + '</span>' : '') +
-      '</span>';
+    if (logoUrl) return '<img class="logo-img" src="' + esc(logoUrl) + '" alt="' + esc(name) + '">';
+    return brandMark('logo-mark') +
+      '<img class="logo-wordmark" src="assets/img/logo-wordmark.webp" width="560" height="83" alt="' + esc(name) + '">';
+  }
+
+  function footerLogo(settings, opts) {
+    var name = str(settings.brand_name) || 'Artivora Creative';
+    var logoUrl = safeUrl(opts.resolve(settings.logo_url));
+    return '<img src="' + esc(logoUrl || 'assets/img/logo.webp') + '"' + (logoUrl ? '' : ' width="700" height="594"') + ' alt="' + esc(name) + '" loading="lazy">';
   }
 
   // ---------- icons (inline, stroke-based) ----------
@@ -155,8 +166,8 @@
       '<span class="nav-toggle-bars" aria-hidden="true"></span><span class="sr-only">Buka menu</span></button>' +
       '<div class="nav-menu" id="nav-menu" data-nav-menu>' +
       '<ul class="nav-links">' + links + '</ul>' +
-      (wa ? '<a class="btn btn-coral btn-small" href="' + esc(wa) + '" target="_blank" rel="noopener">' + icon('whatsapp') + '<span>WhatsApp</span></a>'
-          : '<a class="btn btn-coral btn-small" href="#kontak">Hubungi kami</a>') +
+      (wa ? '<a class="btn btn-primary btn-small" href="' + esc(wa) + '" target="_blank" rel="noopener">' + icon('whatsapp') + '<span>WhatsApp</span></a>'
+          : '<a class="btn btn-primary btn-small" href="#kontak">Hubungi kami</a>') +
       '</div></nav></div></header>';
   }
 
@@ -165,13 +176,13 @@
     var wa = waLink(s);
     var industries = list(h.industries);
     return '<section class="hero" id="top" aria-labelledby="hero-title">' +
-      '<div class="hero-art" aria-hidden="true">' + brandMark({ dark: true, className: 'hero-mark' }) + '</div>' +
+      '<div class="hero-art" aria-hidden="true">' + brandMark('hero-mark') + '</div>' +
       '<div class="wrap hero-inner">' +
       '<h1 id="hero-title" class="hero-title">' + esc(h.headline) + '</h1>' +
       (str(h.subheadline) ? '<p class="hero-sub">' + esc(h.subheadline) + '</p>' : '') +
       '<div class="hero-actions">' +
-      (str(h.cta_primary) ? '<a class="btn btn-coral" href="' + esc(wa || '#kontak') + '"' + (wa ? ' target="_blank" rel="noopener"' : '') + '>' + (wa ? icon('whatsapp') : '') + '<span>' + esc(h.cta_primary) + '</span></a>' : '') +
-      (str(h.cta_secondary) ? '<a class="btn btn-ghost" href="#layanan">' + esc(h.cta_secondary) + '</a>' : '') +
+      (str(h.cta_primary) ? '<a class="btn btn-primary" href="' + esc(wa || '#kontak') + '"' + (wa ? ' target="_blank" rel="noopener"' : '') + '>' + (wa ? icon('whatsapp') : '') + '<span>' + esc(h.cta_primary) + '</span></a>' : '') +
+      (str(h.cta_secondary) ? '<a class="btn btn-outline" href="#layanan">' + esc(h.cta_secondary) + '</a>' : '') +
       '</div>' +
       (industries.length ? '<div class="hero-industries"><p class="hero-industries-label">Kami bekerja dengan</p><ul>' +
         industries.map(function (i) { return '<li>' + esc(i) + '</li>'; }).join('') + '</ul></div>' : '') +
@@ -212,9 +223,9 @@
     var ig = socialUrl('instagram', s.instagram);
     var body;
     if (!items.length) {
-      body = '<div class="work-empty">' + brandMark({ dark: true, className: 'work-empty-mark' }) +
+      body = '<div class="work-empty">' + brandMark('work-empty-mark') +
         '<p>' + esc(sec.empty_text || 'Studi kasus segera hadir.') + '</p>' +
-        (ig ? '<a class="btn btn-coral" href="' + esc(ig) + '" target="_blank" rel="noopener">' + icon('instagram') + '<span>Lihat di Instagram</span></a>' : '') +
+        (ig ? '<a class="btn btn-primary" href="' + esc(ig) + '" target="_blank" rel="noopener">' + icon('instagram') + '<span>Lihat di Instagram</span></a>' : '') +
         '</div>';
     } else {
       body = '<div class="work-list">' + items.map(function (item) {
@@ -222,7 +233,7 @@
         var link = safeUrl(item.link_url);
         var meta = [item.client, item.industry, item.service].map(str).filter(Boolean);
         return '<article class="work">' +
-          '<div class="work-media">' + (img ? '<img src="' + esc(img) + '" alt="' + esc(item.title || item.client) + '" loading="lazy">' : brandMark({ className: 'work-media-mark' })) + '</div>' +
+          '<div class="work-media">' + (img ? '<img src="' + esc(img) + '" alt="' + esc(item.title || item.client) + '" loading="lazy">' : brandMark('work-media-mark')) + '</div>' +
           '<div class="work-text">' +
           (meta.length ? '<p class="work-meta">' + meta.map(esc).join('<span aria-hidden="true">/</span>') + '</p>' : '') +
           '<h3 class="work-title">' + esc(item.title) + '</h3>' +
@@ -265,7 +276,7 @@
           (str(t.audience) ? '<p class="tier-audience">' + esc(t.audience) + '</p>' : '') +
           '<p class="tier-price"><span class="tier-from">Mulai</span> <strong>' + esc(t.price) + '</strong> <span class="tier-period">' + esc(t.period) + '</span></p>' +
           (feats.length ? '<ul class="dot-list">' + feats.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('') + '</ul>' : '') +
-          '<a class="btn ' + (t.highlighted ? 'btn-coral' : 'btn-outline') + '" href="' + esc(wa || '#kontak') + '"' + (wa ? ' target="_blank" rel="noopener"' : '') + '>Tanya paket ' + esc(t.name) + '</a>' +
+          '<a class="btn ' + (t.highlighted ? 'btn-primary' : 'btn-outline') + '" href="' + esc(wa || '#kontak') + '"' + (wa ? ' target="_blank" rel="noopener"' : '') + '>Tanya paket ' + esc(t.name) + '</a>' +
           '</article>';
       }).join('') + '</div>' +
       (str(sec.note) ? '<p class="pricing-note">' + esc(sec.note) + '</p>' : '') +
@@ -293,7 +304,7 @@
     return '<section class="section about" id="tentang" aria-labelledby="tentang-title"><div class="wrap">' +
       '<div class="about-grid">' +
       '<div class="about-text"><h2 id="tentang-title">' + esc(sec.title) + '</h2>' + paragraphs(sec.body) + '</div>' +
-      '<div class="about-media">' + (img ? '<img src="' + esc(img) + '" alt="" loading="lazy">' : brandMark({ dark: true, className: 'about-mark' })) + '</div>' +
+      '<div class="about-media">' + (img ? '<img src="' + esc(img) + '" alt="" loading="lazy">' : brandMark('about-mark')) + '</div>' +
       '</div>' +
       (team.length ? '<ul class="team">' + team.map(function (m) {
         var photo = safeUrl(opts.resolve(m.photo_url));
@@ -339,7 +350,7 @@
       (services.length ? '<div class="field"><label for="f-service">Layanan yang dibutuhkan</label><select id="f-service" name="service"><option value="">Belum yakin, mau konsultasi dulu</option>' +
         services.map(function (sv) { return '<option>' + esc(sv) + '</option>'; }).join('') + '</select></div>' : '') +
       '<div class="field"><label for="f-message">Ceritakan singkat</label><textarea id="f-message" name="message" rows="4" placeholder="Contoh: kafe baru di Dinoyo, ingin akun Instagram lebih ramai sebelum grand opening."></textarea></div>' +
-      '<button class="btn btn-coral btn-block" type="submit">' + icon('whatsapp') + '<span>' + esc(sec.button_label || 'Kirim lewat WhatsApp') + '</span></button>' +
+      '<button class="btn btn-primary btn-block" type="submit">' + icon('whatsapp') + '<span>' + esc(sec.button_label || 'Kirim lewat WhatsApp') + '</span></button>' +
       '<p class="form-status" role="status" data-form-status></p>' +
       '</form></div></section>';
   }
@@ -350,7 +361,7 @@
     var tt = socialUrl('tiktok', s.tiktok);
     var year = opts.year || new Date().getFullYear();
     return '<footer class="site-footer"><div class="wrap footer-inner">' +
-      '<div class="footer-brand"><a class="logo" href="#top">' + logo(s, opts) + '</a>' +
+      '<div class="footer-brand"><a class="footer-logo" href="#top">' + footerLogo(s, opts) + '</a>' +
       (str(s.tagline) ? '<p>' + esc(s.tagline) + (str(s.address) ? ', ' + esc(s.address) : '') + '</p>' : '') + '</div>' +
       '<ul class="footer-links">' + nav.map(function (n) { return '<li><a href="#' + n.id + '">' + esc(n.label) + '</a></li>'; }).join('') + '</ul>' +
       '<ul class="footer-social">' +
@@ -423,7 +434,6 @@
   function renderPage(content, opts) {
     opts = opts || {};
     if (!opts.resolve) opts.resolve = function (p) { return p; };
-    markId = 0;
     var c = content || {};
     var s = c.settings || {};
     var title = str(s.seo_title) || str(s.brand_name) || 'Artivora Creative';
@@ -439,7 +449,7 @@
       '<title>' + esc(title) + '</title>\n' +
       '<meta name="description" content="' + esc(desc) + '">\n' +
       (siteUrl ? '<link rel="canonical" href="' + esc(siteUrl + '/') + '">\n' : '') +
-      '<meta name="theme-color" content="#1E1633">\n' +
+      '<meta name="theme-color" content="#FFFFFF">\n' +
       '<meta property="og:type" content="website">\n' +
       '<meta property="og:locale" content="id_ID">\n' +
       '<meta property="og:title" content="' + esc(title) + '">\n' +
@@ -454,6 +464,7 @@
       '<!-- Halaman ini dibuat otomatis dari content.json. Ubah isinya lewat /admin, bukan di file ini. -->\n' +
       '</head>\n<body' + (opts.preview ? ' class="is-preview"' : '') + '>\n' +
       '<a class="skip-link" href="#main">Langsung ke isi</a>\n' +
+      brandDefs() + '\n' +
       renderBody(c, opts) + '\n' +
       '<script src="assets/js/site.js' + v + '" defer></script>\n' +
       '</body>\n</html>\n';

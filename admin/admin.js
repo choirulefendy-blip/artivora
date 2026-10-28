@@ -42,7 +42,7 @@
         { group: 'Brand' },
         { key: 'brand_name', label: 'Nama brand', type: 'text' },
         { key: 'tagline', label: 'Tagline', type: 'text', help: 'Tampil di footer.' },
-        { key: 'logo_url', label: 'Logo', type: 'image', maxSize: 600, help: 'Opsional. Kosongkan untuk memakai logo bawaan. Pakai versi logo berwarna terang karena header berlatar gelap.' },
+        { key: 'logo_url', label: 'Logo', type: 'image', maxSize: 600, help: 'Opsional. Kosongkan untuk memakai logo Artivora bawaan. Pakai file berlatar transparan (PNG atau SVG).' },
         { group: 'Google & saat link dibagikan' },
         { key: 'seo_title', label: 'Judul halaman', type: 'text', max: 60, help: 'Tampil di tab browser dan hasil pencarian Google.' },
         { key: 'seo_description', label: 'Deskripsi', type: 'textarea', rows: 3, max: 160, help: 'Tampil di bawah judul di Google dan saat link dibagikan di WhatsApp.' },
@@ -265,9 +265,9 @@
     return el('button', { type: 'button', class: 'btn btn-quiet btn-icon ' + (cls || ''), 'aria-label': label, title: label, html: icon(name), onclick: onClick });
   }
 
-  function mark(id) {
-    return '<svg viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="' + id + '" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#B9A5F0"/><stop offset="1" stop-color="#FF6B4A"/></linearGradient></defs><path d="M20 88 C 29 62, 39 36, 52 11" fill="none" stroke="url(#' + id + ')" stroke-width="12" stroke-linecap="round"/><path d="M47 13 C 59 37, 69 62, 81 88" fill="none" stroke="url(#' + id + ')" stroke-width="12" stroke-linecap="round"/><circle cx="50" cy="63" r="7.5" fill="#FF6B4A"/></svg>';
-  }
+  var LOCKUP = '<img class="brand-mark" src="../assets/img/logo-mark.svg" alt="">' +
+    '<img class="brand-wm" src="../assets/img/logo-wordmark.webp" alt="Artivora">' +
+    '<span class="brand-tag">Admin</span>';
 
   // ---------- toast & dialogs ----------
   var toastTimer;
@@ -958,8 +958,8 @@
 
   // ---------- boot ----------
   function boot() {
-    $('#login-brand').innerHTML = mark('adm-g1') + '<span class="brand-word">Artivora <span>Admin</span></span>';
-    $('#top-brand').innerHTML = mark('adm-g2') + '<span class="brand-word">Artivora <span>Admin</span></span>';
+    $('#login-brand').innerHTML = '<img class="brand-stack" src="../assets/img/logo.webp" alt="Artivora">';
+    $('#top-brand').innerHTML = LOCKUP;
     $('#top-brand').href = SITE_BASE;
     $('#repo-name').textContent = CFG.owner + '/' + CFG.repo;
 
